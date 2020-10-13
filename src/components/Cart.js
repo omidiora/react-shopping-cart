@@ -1,8 +1,43 @@
 import React, { Component } from "react";
 import formatCurrency from "../utils";
 // import formatCurrency from "../util";
+import Fade from 'react-reveal/Fade';
 
 export default class Cart extends Component {
+    constructor(props) {
+        super(props)
+    
+        this.state = {
+            name:'',
+            email:"",
+            address:'',
+            showCheckout:false
+        }
+
+    }
+
+handleInput=(e)=>{
+    this.setState({
+        [e.target.name]: e.target.value
+    });
+};
+
+createOrder=(e)=>{
+    this.setState({[e.target.name]: e.target.value})
+}
+createOrder=(e)=>{
+    e.preventDefault();
+    const order={
+        name:this.state.name,
+        email:this.state.email,
+        address :this.state.address,
+        
+    }
+
+    this.props.createOrder(order);
+}
+
+
   render() {
     const { cartItems } = this.props;
     return (
@@ -37,7 +72,9 @@ export default class Cart extends Component {
                 </ul>
               
         </div>
+
 <div className='cart'>
+    <Fade left cascade >
     <div className='total'>
         <div>
             Total:
@@ -48,12 +85,45 @@ export default class Cart extends Component {
                 )
             }
         </div>
-    <button className='button primary'>Proceed</button>
+    <button className='button primary'  onClick={()=>{this.setState({showCheckout:true})}}>Proceed</button>
     </div>
+    </Fade>
 </div>
+{this.state.showCheckout && (
+    <div className='cart'> 
+    <form onSubmit={this.createOrder}>
+        <ul className='form-container'>
+            <li>
+                <label>Email</label>
+                <input type='email'  name='email' onChange={this.handleInput} />
+            </li>
+
+            <li>
+                <label>Name</label>
+                <input type='text' name='name'  onChange={this.handleInput} />
+            </li>
+
+            <li>
+                <label>Address</label>
+                <input type='Address' name='address'  onChange={this.handleInput} />
+            </li>
+            <li>
+                <button className='button primary' type='submit'>Checkout</button>
+            </li>
+
+        </ul>
+
+    </form>
+
+
+    </div>
+)  }
     
       </div>
+      
+      
       </div>
+      
     );
   }
 }

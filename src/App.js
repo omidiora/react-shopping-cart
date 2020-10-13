@@ -12,7 +12,7 @@ class App extends React.Component {
   
     this.state = {
        products:data.products,
-       cartItems:[],
+       cartItems:localStorage.getItem("cartitems") ? JSON.parse(localStorage.getItem("cartitems")):[],
        size:"",
        sort:""
     }
@@ -30,13 +30,16 @@ class App extends React.Component {
       cartItems.push({ ...product, count: 1 });
     }
     this.setState({ cartItems });
+    localStorage.setItem("cartItems" , JSON.stringify(cartItems))
   };
 
   removeFromCart=(product)=>{
     const cartItems=this.state.cartItems.slice();
     this.setState({
       cartItems:cartItems.filter((x)=>x._id !==product._id),
-    })
+    });
+    localStorage.setItem("cartItems" , JSON.stringify(cartItems.filter((x)=>x._id !==product._id)))
+
   }
 
 
@@ -69,6 +72,9 @@ else{
 
   }
   
+  createOrder=(order)=>{
+    alert("Need to save order for  " +  order.name)
+  }
   render() {
     return (
       <div className="grid-container">
@@ -89,13 +95,13 @@ else{
        
      </div>
      <div className='sidebar'>
-       <Cart cartItems={this.state.cartItems}  removeFromCart={this.removeFromCart} />
+       <Cart cartItems={this.state.cartItems} createOrder={this.createOrder} removeFromCart={this.removeFromCart} />
 
      </div>
 
    </div>
 
-   console.log(item)
+
 
   </main>
   <footer>All right is reserved</footer>
